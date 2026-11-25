@@ -34,9 +34,21 @@ def save_split(dev_idx, test_idx, path="results/splits.csv"):
     splits.to_csv(path, index=False)
     return splits
 
+def check_data(X, y):
+    """Kontrola jakości danych na całym zbiorze."""
+    braki = X.isna().sum().sum()
+    duplikaty = X.duplicated().sum()
+    klasy = y.value_counts().sort_index().tolist()
+
+    print("Brakujące wartości:", braki)
+    print("Identyczne wiersze:", duplikaty)
+    print("Liczebności klas:", klasy)
+    return braki, duplikaty, klasy
+
 if __name__ == "__main__":
     X, y = load_data()
     print(X.shape, y.shape)
+    check_data(X, y)
 
     dev_idx, test_idx = make_split(X, y)
     print(len(dev_idx), len(test_idx))
